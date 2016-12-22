@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour {
 
     public Stack<Point> allList;//全数独point数组
 
+    public Stack<Point> availableList;//最终显示的数独
+
     public Stack<int> recordList;//记录选取的合理value值
 
     public Level level;
@@ -32,7 +34,8 @@ public class GameManager : MonoBehaviour {
         _instance = this;//单例模式
         list = new List<GameObject>();
         recordList = new Stack<int>();
-        allList = getFullSoduku();
+        //allList = getFullSoduku();
+        //availableList = getSoduku(allList);//输出全数独，根据难度返回可填写的数独
         initialize();
         level = Level.easy;
     }
@@ -45,20 +48,29 @@ public class GameManager : MonoBehaviour {
 
     //初始化所有item
     public void initialize() {//初始化所有item
-        for(int i=1; i<=9; i++) {
+        allList = getFullSoduku();
+        availableList = getSoduku(allList);//输出全数独，根据难度返回可填写的数独
+        for (int i=1; i<=9; i++) {
             for(int j = 1; j <= 9; j++) {
                 GameObject newGameObject = (GameObject)GameObject.Instantiate(item, transform.position, Quaternion.identity);//实例化预设 返回一个gameObject
                 //newGameObject.GetComponent<Item>().point.x = i;       //i->x
                 //newGameObject.GetComponent<Item>().point.y=j;         //j->y
 
-                newGameObject.GetComponent<Item>().point = allList.Peek();
-                allList.Pop();
+                newGameObject.GetComponent<Item>().point = availableList.Peek();
+                availableList.Pop();
 
                 list.Add(newGameObject);
             }
         }
     }
 
+    //销毁所有item
+    public void destroyAllItem() {
+        foreach(GameObject gameObject in list) {
+            GameObject.Destroy(gameObject);
+        }
+        list.Clear();
+    }
 
     //利用回溯算法生成一个全数独
     public Stack<Point> getFullSoduku() {//利用回溯算法生成一个全数独
@@ -110,7 +122,7 @@ public class GameManager : MonoBehaviour {
                         bool isAvailable = true;
                         foreach (Point point in listStack) {
                             //如果该value不合理
-                            //妈的 先push把自己给算上了 shit
+                            //先push把自己给算上了 shit
                             if ((listStack.Peek().x == point.x || listStack.Peek().y == point.y || listStack.Peek().place == point.place) && listStack.Peek().value == point.value
                                  && !(listStack.Peek().x == point.x && listStack.Peek().y == point.y)) {
 
@@ -200,14 +212,30 @@ public class GameManager : MonoBehaviour {
 
     }
     
-    //获取数独数列
+    //根据难度获取可以填写的数独数列
     public Stack<Point> getSoduku(Stack<Point> fullSoduku) {
-        int rate = 0;
-        if (level == Level.easy) {
+        Stack<Point> stackSoduku = fullSoduku;
+        float rate = 0;
+        switch (level) {
+            case Level.easy:
+                rate = 0.8f;
+                break;
+            case Level.normal:
+                rate = 0.7f;
+                break;
+            case Level.hard:
+                rate = 0.6f;
+                break;
+        }
+        System.Random random = new System.Random();
 
+        foreach(Point point in stackSoduku) {
+            if ((float)random.Next(1, 100) / 100 > rate) {
+                point.value = 0;
+            }
         }
 
-        return null;
+        return stackSoduku;
     }
   
 
