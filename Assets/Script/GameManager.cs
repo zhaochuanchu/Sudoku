@@ -34,8 +34,6 @@ public class GameManager : MonoBehaviour {
         _instance = this;//单例模式
         list = new List<GameObject>();
         recordList = new Stack<int>();
-        //allList = getFullSoduku();
-        //availableList = getSoduku(allList);//输出全数独，根据难度返回可填写的数独
         initialize();
         level = Level.easy;
     }
@@ -218,13 +216,13 @@ public class GameManager : MonoBehaviour {
         float rate = 0;
         switch (level) {
             case Level.easy:
-                rate = 0.8f;
-                break;
-            case Level.normal:
                 rate = 0.7f;
                 break;
+            case Level.normal:
+                rate = 0.55f;
+                break;
             case Level.hard:
-                rate = 0.6f;
+                rate = 0.4f;
                 break;
         }
         System.Random random = new System.Random();

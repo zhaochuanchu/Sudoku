@@ -8,7 +8,7 @@ public class restart : MonoBehaviour {
     void OnMouseUpAsButton() {
         print("点击重置");
         GameManager._instance.destroyAllItem();
-
+        GameManager._instance.initialize();
     }
 
 }
