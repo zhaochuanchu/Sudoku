@@ -202,7 +202,10 @@ public class GameManager : MonoBehaviour {
     
     //获取数独数列
     public Stack<Point> getSoduku(Stack<Point> fullSoduku) {
+        int rate = 0;
+        if (level == Level.easy) {
 
+        }
 
         return null;
     }
