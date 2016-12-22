@@ -12,7 +12,7 @@ public enum Level {
 public class GameManager : MonoBehaviour {
 
     public static GameManager _instance;//实例
-
+    
 
     public Sprite[] sprites;
 
